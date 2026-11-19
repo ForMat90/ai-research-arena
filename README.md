@@ -7,6 +7,8 @@
 
 Progetto personale in cui **quattro agenti LLM con ruoli diversi discutono una tua domanda** e arrivano a una sintesi. Il dibattito è orchestrato come una **macchina a stati (LangGraph)**, servito in **streaming real-time (SSE)** da **FastAPI** e mostrato in una UI web animata.
 
+<img width="1687" height="1010" alt="Screenshot 2026-11-19 140720" src="https://github.com/user-attachments/assets/80848ac4-3cb8-4323-8340-5c6a23b70484" />
+
 > Obiettivo del progetto: imparare e dimostrare, end-to-end, come si costruisce un sistema multi-agent: orchestrazione, output strutturato validato, streaming, fallback tra provider, test deterministici.
 
 <!-- Aggiungi qui uno screenshot: ![Screenshot](docs/screenshot.png) -->
