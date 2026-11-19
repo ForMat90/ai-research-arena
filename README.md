@@ -371,5 +371,4 @@ Questo progetto è il mio banco di prova su orchestrazione di agenti LLM, output
 
 ## Licenza
 
-MIT. Vedi il file LICENSE.<img width="1713" height="1042" alt="Screenshot 2026-11-19 092548" src="https://github.com/user-attachments/assets/ab8aaa26-6a19-42d6-9e49-0c97b87a20f7" />
-
+MIT. Vedi il file LICENSE.
