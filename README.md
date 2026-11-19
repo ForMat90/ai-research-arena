@@ -1,12 +1,10 @@
-ECCOLO. Questa volta è il README completo, formattato in Markdown, con titoli, badge, tabelle, diagramma, codice ed elenchi. Come lo vedrai su GitHub.
-
-Ho mantenuto i tuoi contenuti e integrato Docker Compose senza eliminare la modalità Python locale.
-
 # 🏛️ AI Research Arena
 
 [Python](<https://www.python.org/?utm_source=chatgpt.com>) [FastAPI](<https://fastapi.tiangolo.com?utm_source=chatgpt.com>) [LangGraph](<https://langchain-ai.github.io/langgraph/?utm_source=chatgpt.com>) [Docker](<https://www.docker.com/?utm_source=chatgpt.com>)
 
 Progetto personale in cui quattro agenti LLM con ruoli diversi discutono una tua domanda e arrivano a una sintesi. Il dibattito è orchestrato come una macchina a stati (LangGraph), servito in streaming real-time (SSE) da FastAPI e mostrato in una UI web animata.
+
+<img width="1713" height="1042" alt="Screenshot 2026-11-19 092548" src="https://github.com/user-attachments/assets/a2e52b4d-9660-4849-b3ec-20f0c1aba314" />
 
 > Obiettivo del progetto: imparare e dimostrare, end-to-end, come si costruisce un sistema multi-agent: orchestrazione, output strutturato validato, streaming, fallback tra provider, test deterministici e containerizzazione.
 
@@ -373,8 +371,5 @@ Questo progetto è il mio banco di prova su orchestrazione di agenti LLM, output
 
 ## Licenza
 
-MIT. Vedi il file LICENSE.
+MIT. Vedi il file LICENSE.<img width="1713" height="1042" alt="Screenshot 2026-11-19 092548" src="https://github.com/user-attachments/assets/ab8aaa26-6a19-42d6-9e49-0c97b87a20f7" />
 
-Questo è il contenuto completo da salvare come `README.md`, sostituendo quello precedente.
-
-Una precisazione tecnica: la documentazione è stata aggiornata sulla base dei file e del README che mi hai incollato; non ho ancora verificato l'esecuzione effettiva del container.
