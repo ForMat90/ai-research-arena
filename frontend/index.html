@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#080b16">
+    <meta name="description" content="Luna porta qualsiasi tua domanda al tavolo multi-agent di Nova, Atlas e Sigma.">
+    <title>AI Research Arena — Tavola rotonda multi-agent</title>
+    <link rel="stylesheet" href="/assets/style.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="AI Research Arena">
+        <span class="brand-mark" aria-hidden="true">⚛</span>
+        <span>AI RESEARCH <b>ARENA</b></span>
+      </a>
+        <div class="topbar-right">
+          <button class="lang-toggle" id="lang-toggle" type="button" title="Switch language / Cambia lingua">🌐 EN</button>
+          <span class="topic-pill"><span class="status-dot"></span> TAVOLA MULTI-AGENT</span>
+          <span class="prototype-tag">PROTOTIPO 0.2</span>
+        </div>
+    </header>
+ 
+    <main>
+      <section class="scene-shell" aria-label="Tavola rotonda multi-agent">
+        <div class="scene-heading">
+          <div class="scene-kicker"><span class="eyebrow-line"></span> LUNA RACCOGLIE LA DOMANDA. IL TAVOLO RISPONDE.</div>
+          <div class="scene-title-row">
+            <h1>Una domanda.<br><span>Quattro menti. Una sintesi.</span></h1>
+            <div class="session-status"><span class="status-orbit">✦</span><span id="room-status">IN ATTESA DELLA DOMANDA</span></div>
+          </div>
+        </div>
+ 
+        <div class="stage" id="stage">
+          <div class="stage-grain" aria-hidden="true"></div>
+          <div class="window-glow" aria-hidden="true"></div>
+          <div class="star star-a" aria-hidden="true"></div>
+          <div class="star star-b" aria-hidden="true"></div>
+          <div class="star star-c" aria-hidden="true"></div>
+          <div class="wall-label wall-label-left" aria-hidden="true" id="wall-left">AI RESEARCH<br>ARENA OPEN</div>
+          <div class="wall-label wall-label-right" aria-hidden="true">IL TAVOLO È APERTO<br>LA LUCE È ACCESA</div>
+ 
+          <div class="round-table" aria-hidden="true">
+            <div class="table-top">
+              <i class="table-ring"></i>
+              <div class="table-hologram" id="table-hologram" data-topic="quantum">
+                <svg class="hologram-visual holo-quantum" viewBox="0 0 100 100" aria-hidden="true">
+                  <ellipse cx="50" cy="50" rx="39" ry="15" fill="none" stroke="currentColor" stroke-width="1.5" transform="rotate(-32 50 50)"/>
+                  <ellipse cx="50" cy="50" rx="39" ry="15" fill="none" stroke="currentColor" stroke-width="1.5" transform="rotate(32 50 50)"/>
+                  <circle cx="50" cy="50" r="6" fill="currentColor"/>
+                  <circle class="holo-particle" cx="20" cy="35" r="3" fill="#fff5c8"/>
+                  <circle class="holo-particle holo-particle-two" cx="78" cy="66" r="3" fill="#fff5c8"/>
+                </svg>
+                <svg class="hologram-visual holo-entanglement" viewBox="0 0 100 100" aria-hidden="true">
+                  <path d="M22 50c9-29 17-29 28 0s19 29 28 0" fill="none" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="22" cy="50" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="78" cy="50" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                  <circle class="holo-particle" cx="22" cy="50" r="3" fill="#fff5c8"/>
+                  <circle class="holo-particle holo-particle-two" cx="78" cy="50" r="3" fill="#fff5c8"/>
+                </svg>
+                <svg class="hologram-visual holo-black-hole" viewBox="0 0 100 100" aria-hidden="true">
+                  <ellipse cx="50" cy="50" rx="42" ry="15" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(-22 50 50)"/>
+                  <ellipse cx="50" cy="50" rx="30" ry="10" fill="none" stroke="#f8c46a" stroke-width="2" transform="rotate(18 50 50)"/>
+                  <circle cx="50" cy="50" r="13" fill="#111323" stroke="currentColor" stroke-width="2"/>
+                  <circle class="holo-particle" cx="14" cy="34" r="3" fill="#fff5c8"/>
+                </svg>
+                <svg class="hologram-visual holo-qubit" viewBox="0 0 100 100" aria-hidden="true">
+                  <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1.7"/>
+                  <ellipse cx="50" cy="50" rx="34" ry="13" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M50 16v68M50 50l24-23" fill="none" stroke="#fff5c8" stroke-width="1.7"/>
+                  <circle class="holo-particle" cx="74" cy="27" r="4" fill="#fff5c8"/>
+                </svg>
+                <svg class="hologram-visual holo-atom" viewBox="0 0 100 100" aria-hidden="true">
+                  <ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="currentColor" stroke-width="1.5" transform="rotate(-42 50 50)"/>
+                  <ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="currentColor" stroke-width="1.5" transform="rotate(42 50 50)"/>
+                  <ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="50" cy="50" r="6" fill="#fff5c8"/>
+                  <circle class="holo-particle" cx="17" cy="31" r="3" fill="#fff5c8"/>
+                </svg>
+                <span id="hologram-label">PROIEZIONE IN ATTESA</span>
+                <b id="hologram-topic">Una domanda accende il tavolo</b>
+              </div>
+            </div>
+            <div class="table-stem"></div>
+            <div class="table-foot"></div>
+          </div>
+ 
+          <div class="researcher researcher-nova" data-agent="nova">
+            <div class="chair chair-left" aria-hidden="true"></div>
+            <div class="portrait-frame nova-frame">
+              <svg viewBox="0 0 140 270" class="portrait" role="img" aria-label="Nova, analista teorica">
+                <defs>
+                  <linearGradient id="nova-coat" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#f6f1ff"/><stop offset="1" stop-color="#b9bce9"/></linearGradient>
+                  <linearGradient id="nova-hair" x1="0" x2="1"><stop stop-color="#514b88"/><stop offset=".55" stop-color="#29294e"/><stop offset="1" stop-color="#171a34"/></linearGradient>
+                  <linearGradient id="nova-skin" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#ffd9c5"/><stop offset="1" stop-color="#eaa991"/></linearGradient>
+                </defs>
+                <ellipse cx="70" cy="259" rx="36" ry="6" fill="#11172e" opacity=".55"/>
+                <path d="M53 199h16l-3 42-7 12-10-4 5-18zM74 199h15l8 40-3 13-11 1-3-15z" fill="#303352" stroke="#171a34" stroke-width="2"/>
+                <path d="m48 246 14 2 4 12H43zM84 247l13-1 9 14H83z" fill="#8379c6" stroke="#252540" stroke-width="2"/>
+                <path d="M31 134q7-15 24-19h31q20 6 25 21l8 72q-23 15-48 12-29 1-49-12z" fill="url(#nova-coat)" stroke="#33365f" stroke-width="3"/>
+                <path d="m55 124 15 23 15-23 7 91H62z" fill="#525a9f" stroke="#29294e" stroke-width="2"/>
+                <path d="M53 193h38v10H53z" fill="#262b52"/><circle cx="71" cy="198" r="4" fill="#f2d27b"/>
+                <path d="M55 101h30v30H55z" fill="url(#nova-skin)"/>
+                <!-- chin shadow & neck connection -->
+                <path d="M56 94 h28 v28 H56 z" fill="url(#nova-skin)"/>
+                <path d="M56 94 q14 8 28 0" stroke="rgba(100,50,40,0.25)" stroke-width="2" fill="none"/>
+                <path d="M41 54q-15 35-2 68 9 13 19 4l-7-39 19-28zM88 48q24 21 17 57-3 18-17 25l-7-17 9-35z" fill="url(#nova-hair)" stroke="#1b1b38" stroke-width="2"/>
+                <ellipse cx="70" cy="72" rx="26" ry="32" fill="url(#nova-skin)" stroke="#54394f" stroke-width="1.5"/>
+                <path d="M43 68Q38 28 68 26q34-2 32 45-10-5-16-26-12 15-39 20z" fill="url(#nova-hair)" stroke="#1b1b38" stroke-width="2"/>
+                <path d="M47 48q9-17 22-17M83 39q9 7 12 19M43 75q-5 12 0 22" fill="none" stroke="#8981c8" stroke-width="3" stroke-linecap="round"/>
+                <path d="M54 67q7-5 13 0M75 67q7-5 13 0" fill="none" stroke="#44344e" stroke-width="2"/>
+                <ellipse cx="60" cy="76" rx="4" ry="5" fill="#5147a0"/><ellipse cx="80" cy="76" rx="4" ry="5" fill="#5147a0"/>
+                <circle cx="61" cy="77" r="1.6" fill="#fff"/><circle cx="81" cy="77" r="1.6" fill="#fff"/>
+                <path class="character-mouth" d="M67 91q4 3 8 0" fill="none" stroke="#a95e72" stroke-width="2" stroke-linecap="round"/>
+                <path d="M48 85q4 3 8 0M84 85q4 3 8 0" stroke="#e88e9c" stroke-width="2" opacity=".55"/>
+                <path class="character-gesture" d="M37 143q-13 8-16 28l11 8 15-25M102 143q14 6 21 18l-7 9-20-10" fill="url(#nova-coat)" stroke="#33365f" stroke-width="4" stroke-linejoin="round"/>
+                <circle cx="121" cy="158" r="7" fill="#e7dcff" stroke="#aeb3e9" stroke-width="2"/>
+                <path d="M111 158h20M121 148v20" stroke="#aeb3e9" stroke-width="1"/>
+                <path d="m50 128 20 20 20-20" fill="none" stroke="#faf7ff" stroke-width="3"/>
+              </svg>
+            </div>
+              <div class="researcher-label"><b>NOVA</b><span>ANALISTA</span></div>
+            <span class="seat-light" aria-hidden="true"></span>
+          </div>
+ 
+          <div class="researcher researcher-atlas" data-agent="atlas">
+            <div class="chair chair-center" aria-hidden="true"></div>
+            <div class="portrait-frame atlas-frame">
+              <svg viewBox="0 0 140 270" class="portrait" role="img" aria-label="Atlas, analista pratica">
+                <defs>
+                  <linearGradient id="atlas-coat" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#e9fff7"/><stop offset="1" stop-color="#88cdb9"/></linearGradient>
+                  <linearGradient id="atlas-hair" x1="0" x2="1"><stop stop-color="#27695f"/><stop offset="1" stop-color="#123b3b"/></linearGradient>
+                  <linearGradient id="atlas-skin" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#f4c09c"/><stop offset="1" stop-color="#c78067"/></linearGradient>
+                </defs>
+                <ellipse cx="70" cy="259" rx="36" ry="6" fill="#11172e" opacity=".55"/>
+                <path d="M48 198h17l-2 46-9 11H43l7-16zM74 198h17l8 44-7 12H80l1-17z" fill="#263e42" stroke="#102c31" stroke-width="2"/>
+                <path d="m43 247 17 1 4 12H38zM81 247l13-1 10 14H78z" fill="#315c59" stroke="#102c31" stroke-width="2"/>
+                <path d="M29 135q11-18 27-20h29q21 5 27 21l8 70q-21 15-50 13-30 2-49-13z" fill="url(#atlas-coat)" stroke="#265b58" stroke-width="3"/>
+                <path d="m54 124 16 22 16-22 8 87H62z" fill="#397f72" stroke="#20534f" stroke-width="2"/>
+                <path d="M53 191h38v10H53z" fill="#245651"/><circle cx="71" cy="196" r="4" fill="#f2d27b"/>
+                <path d="M54 101h32v29H54z" fill="url(#atlas-skin)"/>
+                <!-- chin shadow & neck connection -->
+                <path d="M56 94 h28 v28 H56 z" fill="url(#atlas-skin)"/>
+                <path d="M56 94 q14 8 28 0" stroke="rgba(100,50,40,0.25)" stroke-width="2" fill="none"/>
+                <path d="M42 54q-12 26-4 57l11 14 9-15-9-24zM88 53q19 29 10 60l-10 12-7-17 8-28z" fill="url(#atlas-hair)" stroke="#103b39" stroke-width="2"/>
+                <ellipse cx="70" cy="72" rx="26" ry="32" fill="url(#atlas-skin)" stroke="#5d3b37" stroke-width="1.5"/>
+                <path d="M44 65q-3-38 28-39 33 0 26 43-11-7-16-23-15 14-38 12z" fill="url(#atlas-hair)" stroke="#103b39" stroke-width="2"/>
+                <path d="m49 48 11-11M69 34l9 8M84 38l7 10" fill="none" stroke="#79c9b0" stroke-width="3" stroke-linecap="round"/>
+                <path d="M55 69q6-4 12 0M75 69q6-4 12 0" fill="none" stroke="#293b3b" stroke-width="2"/>
+                <ellipse cx="61" cy="77" rx="4" ry="5" fill="#397c73"/><ellipse cx="80" cy="77" rx="4" ry="5" fill="#397c73"/>
+                <circle cx="62" cy="78" r="1.5" fill="#fff"/><circle cx="81" cy="78" r="1.5" fill="#fff"/>
+                <path class="character-mouth" d="M66 92q4 3 8 0" fill="none" stroke="#8b4e50" stroke-width="2" stroke-linecap="round"/>
+                <path class="character-gesture" d="M37 143q-13 10-17 27l11 8 17-24M101 142q13 4 20 15l-7 10-18-8" fill="url(#atlas-coat)" stroke="#265b58" stroke-width="4" stroke-linejoin="round"/>
+                <path d="m107 147 20-23" stroke="#e7f7ef" stroke-width="5" stroke-linecap="round"/>
+                <circle cx="128" cy="121" r="6" fill="#79ffdc" stroke="#fff" stroke-width="1.5"/>
+                <path d="M128 113v-6m7 13h6m-20-5-4-5" stroke="#79ffdc" stroke-width="1.5"/>
+                <path d="m50 128 20 19 20-19" fill="none" stroke="#f4fff9" stroke-width="3"/>
+                <path d="M96 167h10v20H96z" fill="#daf3e9" stroke="#548477" stroke-width="2"/><circle cx="101" cy="173" r="2" fill="#54c5a5"/>
+              </svg>
+            </div>
+            <div class="researcher-label"><b>ATLAS</b><span>PRATICA</span></div>
+            <span class="seat-light" aria-hidden="true"></span>
+          </div>
+ 
+          <div class="researcher researcher-sigma" data-agent="sigma">
+            <div class="chair chair-right" aria-hidden="true"></div>
+            <div class="portrait-frame sigma-frame">
+              <svg viewBox="0 0 140 270" class="portrait" role="img" aria-label="Sigma, revisore critico">
+                <defs>
+                  <linearGradient id="sigma-coat" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#f9edf1"/><stop offset="1" stop-color="#c57c91"/></linearGradient>
+                  <linearGradient id="sigma-hair" x1="0" x2="1"><stop stop-color="#71324e"/><stop offset="1" stop-color="#351c36"/></linearGradient>
+                  <linearGradient id="sigma-skin" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#ffd8c5"/><stop offset="1" stop-color="#e8ab9c"/></linearGradient>
+                </defs>
+                <ellipse cx="70" cy="259" rx="36" ry="6" fill="#11172e" opacity=".55"/>
+                <path d="M49 198h17l-4 44-8 13-12-2 7-17zM75 198h17l7 44-7 12H80l1-16z" fill="#342739" stroke="#21182b" stroke-width="2"/>
+                <path d="m43 247 17 1 4 12H38zM81 247l13-1 10 14H78z" fill="#963d5b" stroke="#21182b" stroke-width="2"/>
+                <path d="M29 136q10-19 27-21h29q21 5 27 22l7 68q-19 15-49 14-31 1-49-14z" fill="url(#sigma-coat)" stroke="#71334e" stroke-width="3"/>
+                <path d="m54 125 16 22 16-22 7 85H62z" fill="#432b45" stroke="#2b2037" stroke-width="2"/>
+                <path d="m70 148 6 10-6 28-6-28z" fill="#d84f70"/>
+                <path d="M54 101h32v28H54z" fill="url(#sigma-skin)"/>
+                <!-- chin shadow & neck connection -->
+                <path d="M56 94 h28 v28 H56 z" fill="url(#sigma-skin)"/>
+                <path d="M56 94 q14 8 28 0" stroke="rgba(100,50,40,0.25)" stroke-width="2" fill="none"/>
+                <path d="M42 54q-14 33-4 66l12 10 8-16-8-30zM89 50q19 27 10 60l-11 13-8-17 8-27z" fill="url(#sigma-hair)" stroke="#321b32" stroke-width="2"/>
+                <ellipse cx="70" cy="72" rx="26" ry="32" fill="url(#sigma-skin)" stroke="#613b48" stroke-width="1.5"/>
+                <path d="M43 70Q39 28 70 26q34-1 28 48-10-7-14-29-13 17-40 19z" fill="url(#sigma-hair)" stroke="#321b32" stroke-width="2"/>
+                <path d="M48 48q9-15 19-17M80 34q12 7 15 20" fill="none" stroke="#c76b86" stroke-width="3" stroke-linecap="round"/>
+                <path d="M55 68q6-4 12 0M75 68q6-4 12 0" fill="none" stroke="#492a3d" stroke-width="2"/>
+                <ellipse cx="61" cy="77" rx="4" ry="5" fill="#8f4164"/><ellipse cx="80" cy="77" rx="4" ry="5" fill="#8f4164"/>
+                <circle cx="62" cy="78" r="1.5" fill="#fff"/><circle cx="81" cy="78" r="1.5" fill="#fff"/>
+                <circle cx="61" cy="77" r="10" fill="none" stroke="#4c263f" stroke-width="2.5"/><circle cx="80" cy="77" r="10" fill="none" stroke="#4c263f" stroke-width="2.5"/>
+                <path d="M71 77h-1" fill="none" stroke="#a45b6c" stroke-width="2" stroke-linecap="round"/>
+                <path class="character-mouth" d="M66 92q4 2 8-1" fill="none" stroke="#a45b6c" stroke-width="2" stroke-linecap="round"/>
+                <path class="character-gesture" d="M36 146q18 5 34 13 13-9 29-13l9 13q-17 9-37 23-19-12-44-23z" fill="#e7ced7" stroke="#71334e" stroke-width="4" stroke-linejoin="round"/>
+                <path d="M44 136 70 158l26-22" fill="none" stroke="#fff7f9" stroke-width="3"/>
+                <path d="M104 121h17m-8-8v17" stroke="#f0a2b3" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="researcher-label"><b>SIGMA</b><span>SCETTICA</span></div>
+            <span class="seat-light" aria-hidden="true"></span>
+          </div>
+ 
+          <div class="speech-layer" id="speech-layer" aria-live="polite"></div>
+ 
+          <div class="tools-dock" id="tools-dock" hidden>
+            <button class="dock-button dock-transcript" id="view-transcript-btn" type="button" disabled>📜 Rileggi interventi completi</button>
+            <button class="dock-button dock-flashcards" id="flashcards-button" type="button" disabled>✧ Crea flashcard</button>
+            <div class="dock-exports">
+              <button class="text-button" id="flashcards-export-json" type="button" hidden>⬇ JSON</button>
+              <button class="text-button" id="flashcards-export-csv" type="button" hidden>⬇ CSV</button>
+            </div>
+            <span class="tool-status" id="flashcards-status" aria-live="polite"></span>
+          </div>
+ 
+          <section class="coordinator-front" data-agent="coordinator" aria-label="Luna, coordinatrice">
+            <div class="coordinator-portrait">
+              <div class="portrait-frame coordinator-frame">
+                <svg viewBox="0 0 140 270" class="portrait" role="img" aria-label="Luna, coordinatrice della tavola">
+                  <defs>
+                    <linearGradient id="luna-coat" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fff9e9"/><stop offset=".58" stop-color="#eee5d0"/><stop offset="1" stop-color="#c8b785"/></linearGradient>
+                    <linearGradient id="luna-hair" x1="0" x2="1"><stop stop-color="#8f82b4"/><stop offset=".5" stop-color="#473d62"/><stop offset="1" stop-color="#28243d"/></linearGradient>
+                    <linearGradient id="luna-skin" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#ffe2cf"/><stop offset="1" stop-color="#e9b397"/></linearGradient>
+                  </defs>
+                  <ellipse cx="70" cy="259" rx="36" ry="6" fill="#11172e" opacity=".55"/>
+                  <g class="luna-legs">
+                    <path class="luna-leg-left" d="M51 194h18l-5 48-8 13-12-2 7-18z" fill="#41405a" stroke="#28243d" stroke-width="2"/>
+                    <path class="luna-leg-right" d="M75 194h17l7 47-8 13H80l1-17z" fill="#41405a" stroke="#28243d" stroke-width="2"/>
+                    <path class="luna-boot-left" d="m45 246 17 1 4 12H39z" fill="#d2b873" stroke="#67563c" stroke-width="2"/>
+                    <path class="luna-boot-right" d="m81 246 14-1 10 14H78z" fill="#d2b873" stroke="#67563c" stroke-width="2"/>
+                  </g>
+                  <path d="M30 133q9-17 27-20h29q20 5 26 22l8 68q-21 13-50 13-29 0-48-13z" fill="url(#luna-coat)" stroke="#89734d" stroke-width="3"/>
+                  <path d="m52 124 18 22 18-22 8 84H62z" fill="#fff9eb" stroke="#c5a75f" stroke-width="2"/>
+                  <path d="M52 190h38v10H52z" fill="#be9d57"/><circle cx="71" cy="195" r="4" fill="#fff2b0"/>
+                  <path d="M54 101h32v29H54z" fill="url(#luna-skin)"/>
+                  <!-- chin shadow & neck connection -->
+                  <path d="M56 94 h28 v28 H56 z" fill="url(#luna-skin)"/>
+                  <path d="M56 94 q14 8 28 0" stroke="rgba(100,50,40,0.25)" stroke-width="2" fill="none"/>
+                  <path d="M42 49q-15 29-8 73 4 20 17 19l9-21-9-34zM89 46q18 24 13 60-2 29-17 37l-8-21 8-31z" fill="url(#luna-hair)" stroke="#2d263f" stroke-width="2"/>
+                  <ellipse cx="70" cy="72" rx="26" ry="32" fill="url(#luna-skin)" stroke="#62414b" stroke-width="1.5"/>
+                  <path d="M43 68Q39 25 70 24q35 0 28 48-11-7-16-30-12 17-40 20z" fill="url(#luna-hair)" stroke="#2d263f" stroke-width="2"/>
+                  <path d="M46 47q9-15 19-18M79 32q12 8 16 22M40 77q-3 14 4 25M94 74q3 14-4 26" fill="none" stroke="#b5a5d0" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M55 68q6-5 12 0M75 68q6-5 12 0" fill="none" stroke="#49354b" stroke-width="2"/>
+                  <ellipse cx="61" cy="77" rx="4.3" ry="5.5" fill="#5866a0"/><ellipse cx="80" cy="77" rx="4.3" ry="5.5" fill="#5866a0"/>
+                  <circle cx="62" cy="78" r="1.7" fill="#fff"/><circle cx="81" cy="78" r="1.7" fill="#fff"/>
+                  <path class="character-mouth" d="M66 92q5 3 9 0" fill="none" stroke="#a95e72" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M48 86q4 3 8 0M84 86q4 3 8 0" stroke="#e88e9c" stroke-width="2" opacity=".55"/>
+                  <path class="character-gesture" d="M36 143q-13 9-18 26l10 9 19-24M103 143q14 6 20 19l-9 9-20-11" fill="url(#luna-coat)" stroke="#89734d" stroke-width="4" stroke-linejoin="round"/>
+                  <path d="m49 127 21 20 21-20M70 147v49" fill="none" stroke="#c49b58" stroke-width="3"/>
+                  <path d="M86 39l8-8 8 8-8 8z" fill="#f4d36d" stroke="#fff0b5" stroke-width="1.5"/>
+                  <path d="M121 159h13m-6-7v14" stroke="#f4d36d" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="coordinator-caption"><b>LUNA</b><span>LA TUA COORDINATRICE</span></div>
+            </div>
+ 
+            <div class="coordinator-balloon" id="coordinator-balloon">
+              <span class="balloon-tail" aria-hidden="true"></span>
+              <div class="balloon-heading"><span class="speaker-dot"></span><span id="coordinator-label">LUNA · COORDINATRICE</span></div>
+              <div id="coordinator-intro">
+                <h2>Mettiamo la domanda al tavolo.</h2>
+                <p>Luna porta la tua domanda a Nova, Atlas e Sigma. Si confrontano e poi torna da te con una sintesi.</p>
+                <form id="question-form" class="question-form">
+                  <label class="sr-only" for="question">La tua domanda</label>
+                  <textarea id="question" name="question" rows="2" maxlength="2000" placeholder="Chiedi qualsiasi cosa: idee, lavoro, scienza, vita quotidiana…" required></textarea>
+                  <div class="form-footer">
+                    <label class="file-picker" for="pdf-file">
+                      <span aria-hidden="true">＋</span><span id="file-name">Allega documento (PDF)</span>
+                      <input id="pdf-file" type="file" accept="application/pdf,.pdf">
+                    </label>
+                    <button class="submit-button" id="submit-button" type="submit">
+                      <span>Discutiamone</span><span aria-hidden="true">↗</span>
+                    </button>
+                  </div>
+                </form>
+                <p class="provider-status" id="provider-status" aria-live="polite">Controllo la configurazione AI…</p>
+                <div class="memory-row">
+                  <span id="memory-status" aria-live="polite">MEMORIA LOCALE: VUOTA</span>
+                  <button class="text-button" id="clear-memory" type="button">Dimentica</button>
+                </div>
+                <p class="privacy-note" id="privacy-note">Lo storico delle tue ultime domande è salvato <strong>solo in questo browser</strong>. Quando invii una domanda, il suo contenuto (incluso lo storico e il PDF) viene trasmesso al provider AI scelto.</p>
+              </div>
+              <div class="coordinator-waiting" id="coordinator-waiting" hidden>
+                <span class="asked-label">LA TUA DOMANDA</span>
+                <p id="asked-question"></p>
+                <div class="waiting-line"><span class="empty-spinner"></span><span id="phase-status">Sto chiamando il tavolo…</span></div>
+              </div>
+              <div class="coordinator-answer" id="coordinator-answer" hidden></div>
+              <div class="coordinator-error" id="coordinator-error" hidden role="alert"></div>
+              <div class="coordinator-actions" id="coordinator-actions" hidden>
+                <button class="text-button" id="new-question" type="button">Nuova domanda ↗</button>
+              </div>
+            </div>
+          </section>
+        </div>
+ 
+        <div class="research-desk">
+          <section class="sources-panel" id="sources-panel" hidden>
+            <div class="desk-heading">
+              <div><span class="eyebrow-line"></span> FONTI PORTATE AL TAVOLO</div>
+              <span id="source-count"></span>
+            </div>
+            <div class="source-grid" id="source-list"></div>
+            <p class="source-caveat">Le fonti sono risultati arXiv e/o il PDF caricato. Un link verificabile non garantisce da solo che ogni frase AI sia corretta; gli e-print possono non essere peer-reviewed.</p>
+          </section>
+          <details class="transcript-panel" id="transcript-panel" hidden>
+            <summary>Rileggi gli interventi completi</summary>
+            <div id="transcript-list"></div>
+          </details>
+          <div class="flashcards-grid" id="flashcards-grid"></div>
+        </div>
+      </section>
+    </main>
+ 
+    <footer><span>AI RESEARCH ARENA <span>·</span> TAVOLA MULTI-AGENT</span><span>LE PROSPETTIVE SONO RUOLI AI DISTINTI, NON PERSONE REALI</span></footer>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>
+ 
