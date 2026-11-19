@@ -108,38 +108,140 @@ Si può assegnare un modello diverso a ciascun ruolo (`NOVA_MODEL`, `ATLAS_MODEL
 
 ---
 
-## Avvio rapido
+Avvio rapido
 
-Serve Python 3.11 o superiore.
+AI Research Arena può essere eseguito in due modalità:
 
-```powershell
+Docker Compose (consigliato): ambiente isolato e riproducibile, senza installare manualmente Python e le dipendenze.
+Python locale: esecuzione tradizionale in ambiente virtuale.
+Opzione 1 — Docker Compose (consigliato)
+
+Requisiti:
+
+Docker Desktop (Windows/macOS) oppure Docker Engine con Docker Compose (Linux).
+
+Clona il repository:
+
+bash
 git clone https://github.com/ForMat90/ai-research-arena.git
 cd ai-research-arena
 
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
+
+Crea il file di configurazione:
+
+Windows PowerShell:
+
+powershell
 Copy-Item .env.example .env
 
+
+Linux/macOS:
+
+bash
+cp .env.example .env
+
+
+Avvia l'applicazione:
+
+bash
+docker compose up --build
+
+
+Apri il browser:
+
+http://localhost:8000
+
+Per arrestare l'applicazione:
+
+bash
+docker compose down
+
+
+Per avviarla nuovamente senza ricostruire l'immagine:
+
+bash
+docker compose up -d
+
+
+La configurazione dei provider LLM viene letta dal file .env.
+
+Opzione 2 — Python locale
+
+Requisiti:
+
+Python 3.11 o superiore.
+
+Clona il repository:
+
+powershell
+git clone https://github.com/ForMat90/ai-research-arena.git
+cd ai-research-arena
+
+
+Crea e attiva un ambiente virtuale:
+
+powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+
+Installa le dipendenze:
+
+powershell
+python -m pip install -r requirements.txt
+
+
+Crea il file di configurazione:
+
+powershell
+Copy-Item .env.example .env
+
+
+Avvia il backend:
+
+powershell
 python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
-```
 
-Apri `http://127.0.0.1:8000`. Su Linux/macOS usa `source .venv/bin/activate` e `cp .env.example .env`.
 
-Non serve nessuna chiave: il provider predefinito è gratuito. Per usare un modello locale:
+Apri http://127.0.0.1:8000.
 
-```dotenv
+Su Linux/macOS usa source .venv/bin/activate e cp .env.example .env.
+
+Configurazione provider
+
+Non è necessariamente richiesta una chiave API: sono disponibili provider gratuiti.
+
+Per utilizzare un modello locale con Ollama:
+
+dotenv
 LLM_PROVIDER=ollama
 LLM_MODEL=qwen2.5:7b
-```
 
-```powershell
+
+Scarica il modello:
+
+bash
 ollama pull qwen2.5:7b
-```
 
-Altri dettagli (porta occupata, provider alternativi) sono in [`avvio.md`](avvio.md).
 
----
+Con Docker, per collegarsi a Ollama installato sul computer host, occorre configurare l'indirizzo raggiungibile dal container anziché utilizzare localhost.
+
+Altri dettagli (porta occupata e provider alternativi) sono disponibili in avvio.md.
+
+Docker
+
+L'applicazione viene eseguita in un singolo container Docker che comprende:
+
+Backend FastAPI.
+Workflow multi-agent LangGraph.
+Frontend web.
+Dipendenze Python.
+
+Docker Compose gestisce la costruzione dell'immagine, l'avvio del container e la configurazione delle variabili d'ambiente.
+
+La porta 8000 viene esposta esclusivamente sull'interfaccia locale del computer.
+
+Il file .env contiene la configurazione personale dei provider e non deve essere caricato su GitHub.
 
 ## Test
 
