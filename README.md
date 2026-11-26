@@ -100,8 +100,10 @@ Gli agenti possono citare le fonti come `[S1]`, `[D1]`.
 
 | Provider | Chiave API | Note |
 | --- | --- | --- |
-| Pollinations | No | Gratuito, con rate-limit per IP; predefinito nel codice se manca il file `.env` |
-| LLM7 | No | Predefinito in `.env.example`, utilizzato anche come fallback |
+| LLM7 | No | Predefinito, funziona anche senza file `.env` |
+| Pollinations | No | Fallback gratuito, limite di circa 1 risposta ogni 45 s per IP |
+| OVH | No | Ultimo fallback gratuito |
+| Groq | Sì, gratuita | Facoltativo: con `GROQ_API_KEY` viene provato per primo |
 | Ollama | No | Modello locale, consigliato per velocità e privacy |
 | OpenRouter | Sì | Se manca la chiave si torna al provider gratuito |
 

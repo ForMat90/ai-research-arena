@@ -51,7 +51,10 @@ POLLINATIONS_URL = "https://text.pollinations.ai/openai"
 LLM7_URL = "https://api.llm7.io/v1/chat/completions"
 KEYLESS_URL = "https://keylessai.thryx.workers.dev/v1/chat/completions"
 OVH_URL = "https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/chat/completions"
+GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 KEYLESS_PROVIDERS = {"pollinations", "llm7", "ovh"}
+# Provider che possono cedere il passo al successivo della catena.
+FALLBACK_PROVIDERS = KEYLESS_PROVIDERS | {"groq"}
 ARXIV_API_URL = "https://export.arxiv.org/api/query"
 ARXIV_NAMESPACE = {
     "atom": "http://www.w3.org/2005/Atom",
@@ -132,19 +135,19 @@ _last_arxiv_request = 0.0
 
 
 def _provider_name() -> str:
-    selected = os.getenv("LLM_PROVIDER", "pollinations").strip().lower()
+    selected = os.getenv("LLM_PROVIDER", "").strip().lower() or "llm7"
     if selected == "openrouter" and not (
         os.getenv("LLM_API_KEY", "").strip()
         or os.getenv("OPENROUTER_API_KEY", "").strip()
     ):
-        return "pollinations"
+        return "llm7"
     return selected
 
 
 def _keyless_fallback_order() -> list[str]:
-    configured = os.getenv("KEYLESS_FALLBACK", "pollinations,llm7,ovh").strip().lower()
+    configured = os.getenv("KEYLESS_FALLBACK", "llm7,pollinations,ovh").strip().lower()
     providers = [p.strip() for p in configured.split(",") if p.strip() in KEYLESS_PROVIDERS]
-    return providers or ["pollinations", "llm7", "ovh"]
+    return providers or ["llm7", "pollinations", "ovh"]
 
 
 def _completion_url(provider: str | None = None) -> str:
@@ -157,6 +160,7 @@ def _completion_url(provider: str | None = None) -> str:
         "pollinations": POLLINATIONS_URL,
         "llm7": LLM7_URL,
         "ovh": OVH_URL,
+        "groq": GROQ_URL,
     }
     if provider in mapping:
         return mapping[provider]
@@ -164,19 +168,31 @@ def _completion_url(provider: str | None = None) -> str:
 
 
 def _model_name(agent_id: str | None = None, provider: str | None = None) -> str:
-    provider = provider or _provider_name()
-    if agent_id:
-        role_model = os.getenv(f"{agent_id.upper()}_MODEL", "").strip()
-        if role_model:
-            return role_model
-    configured_model = os.getenv("LLM_MODEL", "").strip()
-    if configured_model:
-        return configured_model
+    selected = _provider_name()
+    provider = provider or selected
+    # NOVA_MODEL, LLM_MODEL ecc. valgono solo per il provider principale:
+    # un nome di modello di llm7 non esiste su pollinations o ovh.
+    if provider == selected:
+        if agent_id:
+            role_model = os.getenv(f"{agent_id.upper()}_MODEL", "").strip()
+            if role_model:
+                return role_model
+        configured_model = os.getenv("LLM_MODEL", "").strip()
+        if configured_model:
+            return configured_model
+    # Modello per provider: LLM7_MODEL, POLLINATIONS_MODEL, OVH_MODEL, GROQ_MODEL.
+    provider_model = os.getenv(f"{provider.upper()}_MODEL", "").strip()
+    if provider_model:
+        return provider_model
     defaults = {
         "ollama": "qwen2.5:7b",
-        "pollinations": "openai",
-        "llm7": "DeepSeek-V4-Flash-0731",
+        # Senza chiave Pollinations espone solo "openai-fast".
+        "pollinations": "openai-fast",
+        # "default" è l'alias gratuito di llm7: resta valido anche quando
+        # i singoli modelli vengono rinominati o ritirati.
+        "llm7": "default",
         "ovh": "mistralai/Mistral-7B-Instruct-v0.3",
+        "groq": "llama-3.3-70b-versatile",
     }
     if provider in defaults:
         return defaults[provider]
@@ -185,6 +201,8 @@ def _model_name(agent_id: str | None = None, provider: str | None = None) -> str
 
 def _api_key(provider: str | None = None) -> str:
     provider = provider or _provider_name()
+    if provider == "groq":
+        return os.getenv("GROQ_API_KEY", "").strip()
     if provider in KEYLESS_PROVIDERS:
         if provider == "llm7":
             return os.getenv("LLM_API_KEY", "").strip() or "unused"
@@ -427,6 +445,9 @@ def _provider_candidates() -> list[str]:
         order = _keyless_fallback_order()
         if selected not in order:
             order = [selected] + [p for p in order if p != selected]
+        # Groq è opzionale: se c'è la chiave va per primo, poi la catena keyless.
+        if os.getenv("GROQ_API_KEY", "").strip():
+            order = ["groq"] + order
         return order
     return [selected]
 
@@ -440,8 +461,13 @@ async def _stream_completion(
     candidates = _provider_candidates()
     last_error: Exception | None = None
     for index, provider in enumerate(candidates):
+        # Il modello passato dal chiamante vale solo per il provider principale;
+        # nel fallback ogni provider usa il proprio modello.
+        provider_model = (
+            model if model and provider == _provider_name() else _model_name(provider=provider)
+        )
         payload = {
-            "model": model or _model_name(provider=provider),
+            "model": provider_model,
             "stream": True,
             "temperature": 0.35,
             "max_tokens": max_tokens,
@@ -450,7 +476,9 @@ async def _stream_completion(
                 *conversation,
             ],
         }
-        attempts = 3 if provider == "pollinations" else 1
+        # llm7 e Pollinations limitano le richieste per IP: meglio aspettare
+        # qualche secondo che passare subito a un provider peggiore.
+        attempts = 3 if provider in {"pollinations", "llm7"} else 1
         for attempt in range(attempts):
             emitted = False
             try:
@@ -465,8 +493,26 @@ async def _stream_completion(
                     ) as response:
                         if response.is_error:
                             body = (await response.aread()).decode("utf-8", errors="replace")
+                            # Modello inesistente o richiesta rifiutata: ritentare
+                            # non serve, si passa subito al provider successivo.
                             if (
-                                provider in KEYLESS_PROVIDERS
+                                provider in FALLBACK_PROVIDERS
+                                and response.status_code in {400, 401, 403, 404, 422}
+                                and index + 1 < len(candidates)
+                            ):
+                                logger.warning(
+                                    "%s ha rifiutato la richiesta (HTTP %s), provo %s: %s",
+                                    provider,
+                                    response.status_code,
+                                    candidates[index + 1],
+                                    body[:300],
+                                )
+                                last_error = RuntimeError(
+                                    f"{provider} ha restituito HTTP {response.status_code}"
+                                )
+                                break
+                            if (
+                                provider in FALLBACK_PROVIDERS
                                 and response.status_code in {402, 429, 500, 502, 503, 504}
                                 and attempt + 1 >= attempts
                                 and index + 1 < len(candidates)
@@ -482,17 +528,20 @@ async def _stream_completion(
                                 )
                                 break
                             if (
-                                provider == "pollinations"
+                                provider in {"pollinations", "llm7"}
                                 and response.status_code in {402, 429}
                                 and attempt + 1 < attempts
                             ):
-                                retry_after = response.headers.get("Retry-After", "30")
+                                default_wait = "30" if provider == "pollinations" else "3"
+                                max_wait = 90.0 if provider == "pollinations" else 20.0
+                                retry_after = response.headers.get("Retry-After", default_wait)
                                 try:
-                                    wait_seconds = min(float(retry_after), 90.0)
+                                    wait_seconds = min(max(float(retry_after), 1.0), max_wait)
                                 except ValueError:
-                                    wait_seconds = 30.0
+                                    wait_seconds = float(default_wait)
                                 logger.info(
-                                    "Pollinations rate limit: nuovo tentativo tra %.0f secondi",
+                                    "%s rate limit: nuovo tentativo tra %.0f secondi",
+                                    provider,
                                     wait_seconds,
                                 )
                                 await asyncio.sleep(wait_seconds)
@@ -1067,7 +1116,7 @@ async def health() -> dict[str, object]:
             or bool(os.getenv("OPENROUTER_API_KEY", "").strip())
         ),
         "model": _model_name(),
-        "fallback": _keyless_fallback_order() if provider in KEYLESS_PROVIDERS else [provider],
+        "fallback": _provider_candidates(),
         "sources": "arXiv API",
     }
 

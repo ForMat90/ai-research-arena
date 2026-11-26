@@ -1,6 +1,6 @@
 # Avvio rapido
 
-Comandi per far partire il progetto su Windows (PowerShell), dalla cartella `QuantumResearchLab`.
+Comandi per far partire il progetto su Windows (PowerShell), dalla cartella del progetto (`ai-research-arena`).
 
 ## 1. Prima installazione
 

@@ -244,7 +244,10 @@ async function loadProviderStatus() {
     const response = await fetch("/api/health");
     if (!response.ok) throw new Error("Stato provider non disponibile.");
     const health = await response.json();
-    if (health.provider === "pollinations") {
+    if (health.provider === "llm7") {
+      providerStatus.textContent =
+        "AI gratuita attiva · LLM7 senza chiave, con Pollinations e OVH come riserva.";
+    } else if (health.provider === "pollinations") {
       providerStatus.textContent =
         "AI gratuita attiva · Pollinations senza chiave · circa 30 s tra richieste per IP: una discussione può richiedere alcuni minuti.";
     } else if (health.provider === "ollama") {

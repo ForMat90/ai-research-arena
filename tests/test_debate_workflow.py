@@ -213,6 +213,25 @@ class DebateWorkflowTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(main._model_name("nova"), "llama3.1:8b")
             self.assertEqual(main._model_name("atlas"), "qwen2.5:7b")
 
+    def test_defaults_work_without_env_file(self) -> None:
+        with patch.dict(os.environ, {}, clear=True):
+            self.assertEqual(main._provider_name(), "llm7")
+            self.assertEqual(main._provider_candidates(), ["llm7", "pollinations", "ovh"])
+            self.assertEqual(main._model_name(), "default")
+            self.assertEqual(main._model_name(provider="pollinations"), "openai-fast")
+
+    def test_groq_key_puts_groq_first_and_role_models_stay_on_main_provider(self) -> None:
+        with patch.dict(
+            os.environ,
+            {"GROQ_API_KEY": "test", "NOVA_MODEL": "solo-llm7"},
+            clear=True,
+        ):
+            self.assertEqual(main._provider_candidates()[0], "groq")
+            self.assertEqual(main._model_name("nova"), "solo-llm7")
+            self.assertEqual(
+                main._model_name("nova", provider="groq"), "llama-3.3-70b-versatile"
+            )
+
     def test_general_questions_are_not_topic_whitelisted(self) -> None:
         query = main._arxiv_query("Come organizzare meglio una giornata piena?")
 
@@ -244,7 +263,7 @@ class DebateWorkflowTests(unittest.IsolatedAsyncioTestCase):
             response = TestClient(main.app).get("/api/health")
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["provider"], "pollinations")
+        self.assertEqual(response.json()["provider"], "llm7")
         self.assertTrue(response.json()["provider_configured"])
 
 
